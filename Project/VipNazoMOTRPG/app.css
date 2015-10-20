@@ -1,0 +1,26 @@
+﻿* {
+    font-family: 'Segoe UI', sans-serif;
+	margin: 0;
+	padding: 0;
+}
+			
+#main-content {
+	text-align: center;
+	width: 100%;
+}
+			
+#game-main {
+	height: 600px;
+	margin: 0 auto;
+	width: 600px;
+}
+			
+#game-main>header {
+	font-size: 200%;
+	font-weight: bold;
+}
+			
+#game-canvas {
+	background-color: white;
+	border: solid 1px #000;
+}

@@ -1,0 +1,8 @@
+*.suo
+*.map
+Project/VipNazoMOTRPG/Test.pubxml.user
+Project/VipNazoMOTRPG/VipNazoMOTRPG.csproj.user
+Project/VipNazoMOTRPG/bin/TypeScriptHTMLApp1.dll
+Project/VipNazoMOTRPG/bin/
+Project/VipNazoMOTRPG/obj/
+Project/VipNazoMOTRPG/game.all.js
