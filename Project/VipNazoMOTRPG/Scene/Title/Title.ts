@@ -2,6 +2,7 @@
 /// <reference path="../../Event/EventHandler.ts" />
 /// <reference path="../../Util/Easing.ts" />
 /// <reference path="../../Util/Frame.ts" />
+/// <reference path="../IScene.ts" />
 
 module scene.title {
     import IOnClick = eventhandler.IOnClick;
@@ -21,6 +22,8 @@ module scene.title {
 
         initialize(): void {
             this.isClicked_ = false;
+            var player = AudioManager.getPlayer();
+            player.setSource(1, AudioManager.getLoader().load('Res/piko'));
         }
 
 
@@ -34,6 +37,10 @@ module scene.title {
         }
 
         onClick(event: MouseEvent) {
+            if (!this.isClicked_) {
+                var player = AudioManager.getPlayer();
+                player.play(1);
+            }
             this.isClicked_ = true;
         }
     }

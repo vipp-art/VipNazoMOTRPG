@@ -38,7 +38,12 @@
     <TypeScriptCompile Include="Scene\Game\Game.ts" />
     <TypeScriptCompile Include="Scene\IScene.ts" />
     <TypeScriptCompile Include="Scene\Title\Title.ts" />
+    <TypeScriptCompile Include="Sys\Audio\IAudioLoader.ts" />
+    <TypeScriptCompile Include="Sys\Audio\AudioManager.ts" />
     <TypeScriptCompile Include="Sys\CanvasGraphics.ts" />
+    <TypeScriptCompile Include="Sys\Audio\HTML5AudioPlayer.ts" />
+    <TypeScriptCompile Include="Sys\Audio\IAudioPlayer.ts" />
+    <TypeScriptCompile Include="Sys\Audio\IAudioSource.ts" />
     <TypeScriptCompile Include="Sys\IGraphics.ts" />
     <TypeScriptCompile Include="Util\Easing.ts" />
     <TypeScriptCompile Include="Util\Frame.ts" />
@@ -55,7 +60,9 @@
       <DependentUpon>web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Res\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
   </PropertyGroup>

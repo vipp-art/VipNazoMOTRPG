@@ -6,6 +6,7 @@
 /// <reference path="../../Player/PlayerHolder.ts" />
 /// <reference path="../../Player/Player.ts" />
 /// <reference path="../../Util/Random.ts" />
+/// <reference path="../IScene.ts" />
 module scene.game {
     import Cell = field.Cell;
     import CellHolder = field.CellHolder;

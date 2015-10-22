@@ -1,4 +1,5 @@
 ﻿/// <reference path="../Sys/IGraphics.ts" />
+/// <reference path="../Sys/Audio/AudioManager.ts" />
 module scene {
     /** シーンの描画 */
     export interface ISceneRenderer {

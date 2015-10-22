@@ -3,10 +3,12 @@
 /// <reference path="./Event/EventHandler.ts" />
 /// <reference path="./Util/Frame.ts" />
 /// <reference path="./Sys/CanvasGraphics.ts" />
+/// <reference path="./Sys/Audio/HTML5AudioPlayer.ts" />
 import IScene = scene.IScene;
 import Title = scene.title.Title;
 import EventHandler = eventhandler.EventHandler;
 import Frame = util.Frame;
+import AudioManager = sys.audio.AudioManager;
 
 /** メイン */
 module main {
@@ -26,6 +28,8 @@ module main {
             this.element_ = element;
             var canvasElement = <HTMLCanvasElement> document.querySelector("canvas");
             this.graphics_ = new sys.CanvasGraphics(canvasElement.getContext('2d'));
+            // サウンド回り整備
+            sys.audio.html5.AudioManger.setup();
         }
 
         /** ゲームの開始 */
