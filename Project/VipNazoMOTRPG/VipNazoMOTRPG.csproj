@@ -47,9 +47,11 @@
     <TypeScriptCompile Include="Sys\IGraphics.ts" />
     <TypeScriptCompile Include="Util\Easing.ts" />
     <TypeScriptCompile Include="Util\Frame.ts" />
+    <TypeScriptCompile Include="Util\impl\Timer.ts" />
     <TypeScriptCompile Include="Util\Point.ts" />
     <TypeScriptCompile Include="Util\Random.ts" />
     <TypeScriptCompile Include="Util\Rect.ts" />
+    <TypeScriptCompile Include="Util\Timer.ts" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Test.pubxml" />
