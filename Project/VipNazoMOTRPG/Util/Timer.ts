@@ -6,7 +6,7 @@
         /** コールバックの所有者 */
         private owner_: Object;
         /** イベント感覚 */
-        private interval_: number = 100;
+        private interval_: TimeUnit = TimeUnit.fromMillis(100);
 
         /** タグ */
         private tag_: string = '';
@@ -26,7 +26,7 @@
         }
 
         /** */
-        get interval(): number {
+        get interval(): TimeUnit {
             return this.interval_;
         }
 
@@ -41,8 +41,8 @@
         }
 
         /** 期間の設定 */
-        setInterval(milliseconds: number): void {
-            this.interval_ = milliseconds;
+        setInterval(interval: TimeUnit): void {
+            this.interval_ = interval;
         }
 
         /** タグの指定 */

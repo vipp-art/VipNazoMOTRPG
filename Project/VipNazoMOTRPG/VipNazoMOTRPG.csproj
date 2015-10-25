@@ -52,6 +52,7 @@
     <TypeScriptCompile Include="Util\Random.ts" />
     <TypeScriptCompile Include="Util\Rect.ts" />
     <TypeScriptCompile Include="Util\Timer.ts" />
+    <TypeScriptCompile Include="Util\TimeUnit.ts" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Test.pubxml" />
@@ -64,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Res\" />
+    <Folder Include="Util\Tween\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>

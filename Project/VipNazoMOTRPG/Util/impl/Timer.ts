@@ -10,7 +10,7 @@ module util.__internal {
 
         /** タイマーの開始 */
         start(): void {
-            this.id_= setTimeout(() => { this.tick(); }, this.interval);
+            this.id_ = setTimeout(() => { this.tick(); }, this.interval.toMillis());
         }
 
         /** 停止 */
