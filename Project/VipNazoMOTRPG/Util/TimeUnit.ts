@@ -55,5 +55,20 @@
         toDays(): number {
             return this.toMillis() / 1000 / 60 / 60 / 24;
         }
+
+        /** 加算 */
+        add(rhs:TimeUnit): TimeUnit {
+            return TimeUnit.fromMillis(this.toMillis() + rhs.toMillis());
+        }
+
+        /** 減算 */
+        minus(rhs: TimeUnit): TimeUnit {
+            return TimeUnit.fromMillis(this.toMillis() - rhs.toMillis());
+        }
+
+        /** 差 */
+        distanceOf(rhs: TimeUnit): TimeUnit {
+            return TimeUnit.fromMillis(Math.abs(this.toMillis() - rhs.toMillis()));
+        }
     }
 } 
