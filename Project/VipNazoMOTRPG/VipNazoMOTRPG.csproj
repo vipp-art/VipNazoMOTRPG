@@ -23,6 +23,7 @@
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="Ajax\Ajax.ts" />
     <TypeScriptCompile Include="app.ts" />
     <TypeScriptCompile Include="Cursor\SelectCursor.ts" />
     <TypeScriptCompile Include="Cursor\SelectCursorRenderer.ts" />
