@@ -46,6 +46,7 @@
     <TypeScriptCompile Include="Sys\Audio\IAudioSource.ts" />
     <TypeScriptCompile Include="Sys\IGraphics.ts" />
     <TypeScriptCompile Include="Util\Easing.ts" />
+    <TypeScriptCompile Include="Util\Easings\Easings.ts" />
     <TypeScriptCompile Include="Util\Frame.ts" />
     <TypeScriptCompile Include="Util\impl\Timer.ts" />
     <TypeScriptCompile Include="Util\Point.ts" />
@@ -53,6 +54,7 @@
     <TypeScriptCompile Include="Util\Rect.ts" />
     <TypeScriptCompile Include="Util\Timer.ts" />
     <TypeScriptCompile Include="Util\TimeUnit.ts" />
+    <TypeScriptCompile Include="Util\Tween\Tweener.ts" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Test.pubxml" />
@@ -65,7 +67,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Res\" />
-    <Folder Include="Util\Tween\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
