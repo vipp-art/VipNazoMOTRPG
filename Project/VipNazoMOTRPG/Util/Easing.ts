@@ -1,4 +1,5 @@
-﻿module util {
+﻿/// <reference path="./Easings/Easings.ts" />
+module util {
     /** イージング */
     export interface IEaser {
         /** イージング */
