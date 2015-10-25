@@ -30,9 +30,9 @@ module field {
         private static colours_ = CanvasCellRenderer.colours();
         private static colours() {
             var c = {};
-            c[CellType.kForest] = new sys.Color(.2, .9, .2);
-            c[CellType.kRiver] = new sys.Color(.2, .2, .9);
-            c[CellType.kVillage] = new sys.Color(.9, .9, .2);
+            c[CellType.kForest] = new sys.Color(.0, .5, .0);
+            c[CellType.kRiver] = new sys.Color (.0, .0, .5);
+            c[CellType.kVillage] = new sys.Color(1.0, .6, .0);
             return c;
         }
 
