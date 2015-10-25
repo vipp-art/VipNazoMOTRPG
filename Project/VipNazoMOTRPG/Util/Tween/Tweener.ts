@@ -1,7 +1,7 @@
 ﻿module util.tween {
     /** */
     export class TweenParameter {
-        private time_: number;
+        private time_: TimeUnit;
         private onStart_: Function;
         private onUpdate_: Function;
         private onComplete_: Function;
@@ -9,7 +9,11 @@
 
         constructor(parameters: Object) {
             if (parameters) {
-                this.time_ = parameters['time'] || 1;
+                if (parameters['time'] instanceof TimeUnit) {
+                    this.time_ = parameters['time'] || TimeUnit.fromSeconds(1);
+                } else {
+                    this.time_ = TimeUnit.fromMillis(parameters['time'] || 1000);
+                }
                 this.onStart_ = parameters['onStart'];
                 this.onUpdate_ = parameters['onUpdate'];
                 this.onComplete_ = parameters['onComplete'];
@@ -27,7 +31,7 @@
             return result;
         }
 
-        get time(): number { return this.time_; }
+        get time(): TimeUnit { return this.time_; }
         get onStart(): Function { return this.onStart_; }
         get onUpdate(): Function { return this.onUpdate_; }
         get onComplete(): Function { return this.onComplete_; }
@@ -58,17 +62,18 @@
 
         tick(elapsed: number): boolean {
             var isComplete: boolean = false;
-            if (this.elapsed_ < this.parameters_.time) {
+            var time: number = this.parameters_.time.toMillis();
+            if (this.elapsed_ < time) {
                 this.elapsed_ += elapsed;
-                if (this.elapsed_ > this.parameters_.time) {
+                if (this.elapsed_ > time) {
                     // 完了
-                    this.elapsed_ = this.parameters_.time;
+                    this.elapsed_ = time;
                     isComplete = true;
                 }
             }
 
             // 経過時間を0-1に
-            var t: number = this.elapsed_ / this.parameters_.time;
+            var t: number = this.elapsed_ / time;
 
             // いーず
             for (var i in this.begin_) {
