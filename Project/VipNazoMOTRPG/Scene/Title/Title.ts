@@ -68,7 +68,7 @@ module scene.title {
             style.horizontalAlign = sys.HorizontalAlign.kCenter;
             style.verticalAlign = sys.VerticalAlign.kCetner;
             g.setTextStyle(style);
-            g.drawText('くりっくで開始', g.getWidth() * .5, g.getHeight() * .5, new sys.Color(0, 0, 0, alpha));
+            g.drawText('狼狸の森CLICK', g.getWidth() * .5, g.getHeight() * .5, new sys.Color(0, 0, 0, alpha));
         }
     }
 } 
