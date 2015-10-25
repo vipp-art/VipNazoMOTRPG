@@ -2,40 +2,51 @@
     /** */
     export class TweenParameter {
         private time_: TimeUnit;
-        private onStart_: Function;
-        private onUpdate_: Function;
-        private onComplete_: Function;
+        private onStart_: () => void;
+        private onUpdate_: () => void;
+        private onComplete_: () => void;
         private transition_: Easing;
+        private delay_: TimeUnit;
+        private isLoop_: boolean;
 
         constructor(parameters: Object) {
             if (parameters) {
-                if (parameters['time'] instanceof TimeUnit) {
-                    this.time_ = parameters['time'] || TimeUnit.fromSeconds(1);
-                } else {
-                    this.time_ = TimeUnit.fromMillis(parameters['time'] || 1000);
-                }
+                this.time_ = TweenParameter.toTimeUnit(parameters['time'], 1000);
+                this.delay_ = TweenParameter.toTimeUnit(parameters['delay'], 0);
                 this.onStart_ = parameters['onStart'];
                 this.onUpdate_ = parameters['onUpdate'];
                 this.onComplete_ = parameters['onComplete'];
                 this.transition_ = parameters['transition'] || new Easing('liear');
+                this.isLoop_ = parameters['isLoop'] || false;
             }
+        }
+
+        private static toTimeUnit(o, defaultMillis: number): TimeUnit {
+            var result:TimeUnit = (o instanceof TimeUnit)
+                ? (o || TimeUnit.fromMillis(defaultMillis))
+                : (TimeUnit.fromMillis((o || defaultMillis) | 0));
+            return TimeUnit.fromMillis(Math.abs(result.toMillis()));
         }
 
         clone(): TweenParameter {
             var result = new TweenParameter(null);
             result.time_ = this.time;
+            result.delay_ = this.delay_;
             result.onStart_ = this.onStart;
             result.onUpdate_ = this.onUpdate;
             result.onComplete_ = this.onComplete;
             result.transition_ = this.transition;
+            result.isLoop_ = this.isLoop_;
             return result;
         }
 
         get time(): TimeUnit { return this.time_; }
-        get onStart(): Function { return this.onStart_; }
-        get onUpdate(): Function { return this.onUpdate_; }
-        get onComplete(): Function { return this.onComplete_; }
+        get delay(): TimeUnit { return this.delay_; }
+        get onStart(): () => void { return this.onStart_; }
+        get onUpdate(): () => void { return this.onUpdate_; }
+        get onComplete(): () => void { return this.onComplete_; }
         get transition(): Easing { return this.transition_; }
+        get isLoop(): boolean { return this.isLoop_; }
     }
 
     class TweenContext {
@@ -44,6 +55,7 @@
         private end_: Object;
         private instance_: Object;
         private elapsed_: number;
+        private isNotifyStart_: boolean;
 
         constructor(instance: Object, begin: Object, end: Object, parameters: TweenParameter) {
             this.parameters_ = parameters.clone();
@@ -54,26 +66,43 @@
 
         notifyStart(): void {
             this.elapsed_ = 0;
-            if (this.parameters_.onStart) {
-                this.parameters_.onStart();
-            }
+            this.isNotifyStart_ = false;
             this.tick(0);
         }
 
         tick(elapsed: number): boolean {
             var isComplete: boolean = false;
             var time: number = this.parameters_.time.toMillis();
-            if (this.elapsed_ < time) {
+            var delay: number = this.parameters_.delay.toMillis();
+
+            var delayedElapsed: number = this.elapsed_ - delay;
+            if (delayedElapsed < 0) {
+                // まだ遅延が終わっていない
                 this.elapsed_ += elapsed;
-                if (this.elapsed_ > time) {
+                return false;
+            }
+
+            // 開始通知
+            if (!this.isNotifyStart_) {
+                if (this.parameters_.onStart) {
+                    this.parameters_.onStart();
+                }
+            }
+            this.isNotifyStart_ = true;
+
+            // 完了判定
+            if (delayedElapsed < time) {
+                this.elapsed_ += elapsed;
+                delayedElapsed += elapsed;
+                if (delayedElapsed > time) {
                     // 完了
-                    this.elapsed_ = time;
+                    this.elapsed_ = time + delay;
                     isComplete = true;
                 }
             }
 
             // 経過時間を0-1に
-            var t: number = this.elapsed_ / time;
+            var t: number = delayedElapsed / time;
 
             // いーず
             for (var i in this.begin_) {
@@ -91,8 +120,18 @@
             if (isComplete && this.parameters_.onComplete) {
                 // 完了通知
                 this.parameters_.onComplete();
+                if (this.parameters_.isLoop) {
+                    // ループする
+                    this.elapsed_ = 0;
+                    this.isNotifyStart_ = false;
+                    isComplete = false;
+                }
             }
             return isComplete;
+        }
+
+        get instance(): Object {
+            return this.instance_;
         }
     }
 
@@ -111,7 +150,7 @@
         /** FPS */
         private fps_: number = 30;
 
-        /** 前回の呼び出しの日時 */
+        /** 前回の呼び出しの時間 */
         private previous_: number;
 
         constructor() {
@@ -119,6 +158,14 @@
             this.timer_ = Timer.createTimer('Tweener', this.tick, this);
             this.timer_.setInterval(util.TimeUnit.fromMillis(1000 / this.fps_));
             this.timer_.start();
+        }
+
+        /** シングルトン取得 */
+        private static instance(): Tweener {
+            if (!Tweener.instance_) {
+                Tweener.instance_ = new Tweener();
+            }
+            return Tweener.instance_;
         }
 
         /**  */
@@ -146,16 +193,17 @@
 
         /** FPSの指定 */
         static setFps(fps: number): void {
-            Tweener.instance_.fps_ = fps;
+            Tweener.instance().fps_ = fps;
         }
 
         /**
          * アニメーションの開始
          * @param instance
          * @param arguments
-         * poaram parameters
+         * @param parameters
+         * @return コンテキスト
          */
-        static animate(instance: Object, arguments: Object, parameters: TweenParameter): void {
+        static animate(instance: Object, arguments: Object, parameters: TweenParameter): Object {
             var begin: Object = {};
             var end: Object = {};
             for (var i in arguments) {
@@ -167,12 +215,51 @@
 
             var context = new TweenContext(instance, begin, end, parameters);
 
-            if (!Tweener.instance_) {
-                Tweener.instance_ = new Tweener();
+            Tweener.instance().contexts_.push(context);
+            context.notifyStart();
+
+            return context;
+        }
+
+        /**
+         * アニメーションの停止
+         * @param context animteの返り値
+         * @return アニメーションの停止に成功したらtrue
+         */
+        static stop(context: Object): boolean {
+            if (!context) {
+                return false;
             }
 
-            Tweener.instance_.contexts_.push(context);
-            context.notifyStart();
+            if (context instanceof TweenContext) {
+                var index: number = Tweener.instance().contexts_.indexOf(<TweenContext> context);
+                if (index >= 0) {
+                    Tweener.instance().contexts_.splice(index, 1);
+                    return true;
+                }
+            } else {
+                return Tweener.stopAtTarget(context);
+            }
+        }
+
+        /**
+         * アニメーションの停止
+         * @param instancce animteに指定したインスタンス
+         * @return アニメーションの停止に成功したらtrue
+         */
+        static stopAtTarget(instance: Object): boolean {
+            var oldLength = Tweener.instance().contexts_.length;
+            Tweener.instance().contexts_ = Tweener.instance().contexts_.filter((v) => {
+                return v.instance != instance;
+            });
+            return Tweener.instance().contexts_.length != length;
+        }
+
+        /** 全てのアニメーションの停止 */
+        static stopAll(): boolean {
+            var result: boolean = Tweener.instance().contexts_.length > 0;
+            Tweener.instance().contexts_ = new Array();
+            return result;
         }
     }
 

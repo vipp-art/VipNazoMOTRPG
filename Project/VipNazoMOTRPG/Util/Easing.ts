@@ -18,7 +18,7 @@ module util {
         }
 
         /** */
-        private ease_: Function;
+        private ease_: (begin: number, end: number, t: number) => number;
 
         /** */
         constructor(easing) {
@@ -62,6 +62,6 @@ module util {
         };
 
         /** 基本のイージング */
-        private static kDefaultEasing: Function = easing.inSine2;
+        private static kDefaultEasing: (begin: number, end: number, t: number) => number = easing.inSine2;
     }
 }

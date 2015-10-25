@@ -2,7 +2,7 @@
     /** 一定時間後に呼ばれるタイマー */
     export class Timer {
         /** イベント発火時のコールバック */
-        private callback_: Function;
+        private callback_: (timer: Timer) => void;
         /** コールバックの所有者 */
         private owner_: Object;
         /** イベント感覚 */
@@ -17,7 +17,7 @@
          * @param callback イベント発火時に呼ばれる関数 プロトタイプはfunction(eventTarget:Timer)
          * @param owner callbackの親となるオブジェクト
          */
-        static createTimer(tag: string, callback: Function, owner?: Object): Timer {
+        static createTimer(tag: string, callback: (timer: Timer) => void, owner?: Object): Timer {
             var result: Timer = new __internal.HTMLTimer();
             result.tag_ = tag;
             result.callback_ = callback;
@@ -31,7 +31,7 @@
         }
 
         /** */
-        get callback(): Function {
+        get callback(): (timer: Timer) => void {
             return this.callback_;
         }
 
