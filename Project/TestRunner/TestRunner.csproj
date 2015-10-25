@@ -38,6 +38,7 @@
     <TypeScriptCompile Include="Scripts\typings\jasmine\jasmine.d.ts" />
     <TypeScriptCompile Include="Tests\Util\TestRect.ts" />
     <TypeScriptCompile Include="Tests\Util\TestTimeUnit.ts" />
+    <TypeScriptCompile Include="Tests\Util\Tween\TestTweener.ts" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="jasmine\MIT.LICENSE" />
