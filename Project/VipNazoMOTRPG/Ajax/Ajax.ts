@@ -1,4 +1,5 @@
-﻿module ajax {
+﻿/// <reference path="./URL.ts" />
+module ajax {
     /** ajax */
     export class Ajax {
         /** コネクション */
@@ -22,10 +23,10 @@
         /** 送信するデータ */
         private parameters_: Object = null;
 
-        constructor(url: string, onComplete: (ajax: Ajax) => void, onError?: (ajax: Ajax, message: string) => void) {
+        constructor(url: URL, onComplete: (ajax: Ajax) => void, onError?: (ajax: Ajax, message: string) => void) {
             // TODO:XDomainRequest
             this.request_ = new XMLHttpRequest();
-            this.url_ = url;
+            this.url_ = url.url;
             this.onComplete_ = onComplete;
             this.onError_ = onError;
 
@@ -82,17 +83,13 @@
         }
 
         /** 値 */
-        setParameter(parameters: Object): void {
+        setText(parameters: string): void {
             this.parameters_ = parameters;
         }
 
-        /** FORM値 */
-        setForm(paramerts: Object): void {
-            var form:FormData = new FormData();
-            for (var i in paramerts) {
-                form.append(i, paramerts[i]);
-            }
-            this.parameters_ = form;
+        /** 値 */
+        setParameter(parameters: Object): void {
+            this.parameters_ = parameters;
         }
 
         /** バイナリ値 */
@@ -102,14 +99,40 @@
 
         /** GET通信 */
         connect(): void {
-            this.request_.open('GET', this.url_);
-            this.request_.send(this.parameters_);
+            var request: string = '';
+            if (this.parameters_ instanceof Blob) {
+                // blobは無視 -> Base64?
+            } else if (this.parameters_ instanceof String) {
+                request = '?' + this.parameters_;
+            } else if (this.parameters_ instanceof Object) {
+                request = '?';
+                for (var i in this.parameters_) {
+                    request += encodeURIComponent(i) + '=' + encodeURIComponent(this.parameters_[i]);
+                    request += '&';
+                }
+                request = request.substr(0, request.length - 1);
+            }
+            this.request_.open('GET', this.url_ + request);
+            this.request_.send();
         }
 
         /** POST通信 */
         post(): void {
             this.request_.open('POST', this.url_);
-            this.request_.send(this.parameters_);
+
+            if (this.parameters_ instanceof Blob) {
+                this.request_.send(this.parameters_);
+            } else if (this.parameters_ instanceof String) {
+                this.request_.send(this.parameters_);
+            } else if (this.parameters_ instanceof Object) {
+                var form: FormData = new FormData();
+                for (var i in this.parameters_) {
+                    form.append(i, this.parameters_[i]);
+                }
+                this.request_.send(form);
+            } else {
+                this.request_.send();
+            }
         }
 
         /** レスポンスの文字列表現 */
