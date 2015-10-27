@@ -1,0 +1,19 @@
+#!/bin/sh
+
+#
+# .noallow-listファイルに記載されているファイルをコミットしようとするとエラーを出す。
+# リストファイルは最後に空行を入れる
+#
+
+SELFPATH=${0%/*}
+
+while read LINE
+do
+  RESULT=`git diff --cached --name-only | grep "$LINE"`
+  
+  if test -n "${RESULT}"
+  then
+    echo "${RESULT} do not allow commit."
+    exit -1
+  fi
+done < "${SELFPATH}/.noallow-list"
