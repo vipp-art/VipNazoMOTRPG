@@ -1,8 +1,8 @@
 #!/bin/sh
 
-#
-# .noallow-listファイルに記載されているファイルをコミットしようとするとエラーを出す。
-# リストファイルは最後に空行を入れる
+###
+# Tools/Git Hooks/.noallow-listファイルに記載されているファイルをコミットしようとするとエラーを出す。
+# リストファイルは最後に空行を入れること
 #
 
 SELFPATH=${0%/*}
@@ -16,4 +16,7 @@ do
     echo "${RESULT} do not allow commit."
     exit -1
   fi
-done < "${SELFPATH}/.noallow-list"
+done < "${SELFPATH}/../../Tools/Git Hooks/.noallow-list"
+
+# for check.
+#exit -1
