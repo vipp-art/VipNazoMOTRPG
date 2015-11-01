@@ -8,13 +8,27 @@
     </head>
     <body>
         <div id="main-content">
-            <section id="game-main">
-                <header>ほげ</header>
-                <canvas width="590" height="790" id="game-canvas">
-                    未対応
-                </canvas>
-            </section>
             <noscript>未対応</noscript>
+            <div id="contents">
+                <header>ほげ</header>
+                <section id="game-main">
+                    <canvas width="590" height="790" id="game-canvas">
+                        未対応
+                    </canvas>
+                </section>
+                <div id="chat-area">
+                    <p>メッセージ</p>
+                    <div id="chat-log-area">
+                        <div id="chat-log"></div>
+                    </div>
+                    <div id="chat-sender-area">
+                        <form id="chat-sneder" action="javascript:void(0);" method="PUT">
+                            <textarea name="chat-text" id="chat-text"></textarea>
+                            <input type="button" value="送信" />
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </body>
 </html>

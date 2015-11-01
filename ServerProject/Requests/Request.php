@@ -4,8 +4,11 @@ require_once dirname(__FILE__) . '/../MySql/DB.php';
 
 abstract class Request {
 
-    /** 返り値 */
-    private $responses;
+    /** @var array 返り値 */
+    private $responses_;
+
+    /** @var array PUTのリクエスト */
+    private $requests_ = null;
 
     protected function __construct() {
         
@@ -32,37 +35,74 @@ abstract class Request {
             $method = 'get';
         }
 
-        return strtolower($method);
+        $method = strtolower($method);
+        $method[0] = strtoupper($method[0]);
+        return 'do' . $method;
+    }
+
+    /**
+     * PUTのデータの解決
+     */
+    private function readPut() {
+        $this->requests_ = array();
+
+        $putdata = @fopen("php://input", "r");
+
+        if ($putdata) {
+            while (!feof($putdata)) {
+                $line = fgetss($putdata);
+                $tokens = split('=', $line);
+
+                if (count($tokens) != 2) {
+                    continue;
+                }
+
+                $key = rawurldecode($tokens[0]);
+                $value = rawurldecode($tokens[1]);
+
+                $this->requests_ += array($key => trim($value));
+            }
+        }
     }
 
     /**
      * リクエストの処理
      */
     function request() {
-        $this->responses = array();
+        $this->responses_ = array();
 
         $method = Request::getMethod();
         $controller = $this->createController();
 
         // 基本ヘッダ
         header('Access-Control-Allow-Origin: http://localhost:52181');
+        header('Access-Control-Allow-Methods: GET, POST, PUT, OPTIONS, DELETE');
+        header('Access-Control-Allow-Headers: *');
         header('X-Content-Type-Options: nosniff');
 
         $isRollback = true;
 
-        if (method_exists($controller, $method)) {
-            header('Conent-Type: application/json');
+        // PUTなら送信データをパース
+        if ($method === 'doPut') {
+            $this->readPut();
+        }
 
+        if (method_exists($controller, $method)) {
             try {
                 // 処理
                 $controller->$method($this);
-                $result = json_encode($this->responses);
+                $result = json_encode($this->responses_);
+                header('Conent-Type: application/json');
                 echo $result;
                 $isRollback = false;
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
+                echo e;
                 http_response_code(500);
             }
         } else {
+            echo get_class($controller);
+            echo $method;
+            exit();
             http_response_code(500);
         }
 
@@ -90,6 +130,9 @@ abstract class Request {
      * @return string パラメータ
      */
     function parameter($tag) {
+        if (isset($this->requests_[$tag])) {
+            return $this->requests_[$tag];
+        }
 
         if (isset($_REQUEST[$tag])) {
             return $_REQUEST[$tag];
@@ -104,7 +147,7 @@ abstract class Request {
      * @param mixed $value
      */
     function response($name, $value) {
-        $this->responses += array($name => $value);
+        $this->responses_ += array($name => $value);
     }
 
 }

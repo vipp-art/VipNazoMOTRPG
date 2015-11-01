@@ -34,7 +34,7 @@ module ajax {
                 this.onComplete();
             };
             this.request_.onerror = (e: ErrorEvent) => {
-                this.onError(e.error);
+                this.onError(e.error || this.request_.responseText || 'error occurs.');
             };
             this.request_.onprogress = (e: ProgressEvent) => {
                 this.onProgress(e);
@@ -133,6 +133,25 @@ module ajax {
             } else {
                 this.request_.send();
             }
+        }
+
+        /**
+         * PUT通信
+         */
+        put(): void {
+            this.request_.open('PUT', this.url_);
+
+            var request = '';
+            if (this.parameters_ instanceof String) {
+                request = <string> this.parameters_;
+            } else if (this.parameters_ instanceof Object) {
+                for (var i in this.parameters_) {
+                    request += encodeURIComponent(i) + '=' + encodeURIComponent(this.parameters_[i]);
+                    request += '\n';
+                }
+                request = request.substr(0, request.length - 1);
+            }
+            this.request_.send(request);
         }
 
         /** レスポンスの文字列表現 */

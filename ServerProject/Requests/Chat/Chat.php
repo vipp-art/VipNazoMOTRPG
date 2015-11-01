@@ -3,11 +3,11 @@ namespace chat;
 
 require_once dirname(__FILE__) . '/../Request.php';
 
-class Read extends \Request {
+class Chat extends \Request {
     
     public function __construct() {
         parent::__construct();
     }
 }
 
-(new Read())->request();
+(new Chat())->request();

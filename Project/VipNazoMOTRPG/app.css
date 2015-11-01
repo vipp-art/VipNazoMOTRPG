@@ -8,14 +8,19 @@
 	text-align: center;
 	width: 100%;
 }
+
+#contents {
+	height: 800px;
+	margin: 0 auto;
+	width: 1000px;
+}
 			
 #game-main {
-	height: 600px;
-	margin: 0 auto;
+    float: left;
 	width: 600px;
 }
 			
-#game-main>header {
+header {
 	font-size: 200%;
 	font-weight: bold;
 }
@@ -23,4 +28,32 @@
 #game-canvas {
 	background-color: white;
 	border: solid 1px #000;
+}
+
+#chat-area {
+    float: left;
+    height: 600px;
+    margin: 8px;
+    width: 300px;
+}
+
+#chat-log-area {
+    border: solid 1px #000;
+    height: 400px;
+    overflow: auto;
+    width: 300px;
+}
+
+#chat-sender-area {
+    margin-top: 18px;
+    width: 100%;
+}
+
+#chat-text {
+    width: 100%;
+}
+
+input[type=button] {
+    height: 24px;
+    width: 64px;
 }
