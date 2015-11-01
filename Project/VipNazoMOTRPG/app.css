@@ -41,6 +41,8 @@ header {
     border: solid 1px #000;
     height: 400px;
     overflow: auto;
+    padding: 4px;
+    text-align: left;
     width: 300px;
 }
 

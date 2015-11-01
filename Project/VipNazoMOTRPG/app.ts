@@ -4,6 +4,7 @@
 /// <reference path="./Util/Frame.ts" />
 /// <reference path="./Sys/CanvasGraphics.ts" />
 /// <reference path="./Sys/Audio/HTML5AudioPlayer.ts" />
+/// <reference path="./Chat/ChatBoard.ts" />
 import IScene = scene.IScene;
 import Title = scene.title.Title;
 import EventHandler = eventhandler.EventHandler;
@@ -30,6 +31,10 @@ module main {
             this.graphics_ = new sys.CanvasGraphics(canvasElement.getContext('2d'));
             // サウンド回り整備
             sys.audio.html5.AudioManger.setup();
+
+            var chatBoard: chat.ChatBoard = new chat.ChatBoard(
+                document.getElementById('chat-log'),
+                document.getElementById('chat-sneder'), 1, 1);
         }
 
         /** ゲームの開始 */

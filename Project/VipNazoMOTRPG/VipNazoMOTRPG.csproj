@@ -26,6 +26,9 @@
     <TypeScriptCompile Include="Ajax\Ajax.ts" />
     <TypeScriptCompile Include="Ajax\URL.ts" />
     <TypeScriptCompile Include="app.ts" />
+    <TypeScriptCompile Include="Chat\Chat.ts" />
+    <TypeScriptCompile Include="Chat\ChatBoard.ts" />
+    <TypeScriptCompile Include="Chat\Log.ts" />
     <TypeScriptCompile Include="Cursor\SelectCursor.ts" />
     <TypeScriptCompile Include="Cursor\SelectCursorRenderer.ts" />
     <TypeScriptCompile Include="Event\EventHandler.ts" />

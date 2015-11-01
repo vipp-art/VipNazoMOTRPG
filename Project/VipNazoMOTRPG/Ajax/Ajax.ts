@@ -158,5 +158,12 @@ module ajax {
         get responseText(): string {
             return this.request_.responseText;
         }
+
+        /** */
+        get responseObject(): Object {
+            var result;
+            eval('result = ' + this.responseText);
+            return result;
+        }
     }
 } 
