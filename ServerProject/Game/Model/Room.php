@@ -1,8 +1,8 @@
 <?php
 
-namespace game;
+namespace game\model;
 
-require_once dirname(__FILE__) . '../MySql/DB.php';
+require_once dirname(__FILE__) . '/../../MySql/DB.php';
 
 class Room {
 

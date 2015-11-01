@@ -1,8 +1,8 @@
 <?php
 
-namespace game;
+namespace game\model;
 
-require_once dirname(__FILE__) . '../MySql/DB.php';
+require_once dirname(__FILE__) . '/../../MySql/DB.php';
 
 class User {
 
@@ -23,7 +23,7 @@ class User {
         $sql = \mysql\connect();
 
         $state = $sql->prepare('SELECT user_id, user_name, group_id, room_id FROM `user_view` WHERE `user_id`=? LIMIT 1;');
-        $state->bind_param('d', $id);
+        $state->bind_param('i', $id);
         $state->execute();
 
         $userId = $id;

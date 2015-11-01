@@ -2,7 +2,7 @@
 
 namespace mysql;
 
-require_once dirname(__FILE__) . '../mysql-config.php';
+require_once dirname(__FILE__) . '/../mysql-config.php';
 
 /**
  * mysqliの接続
