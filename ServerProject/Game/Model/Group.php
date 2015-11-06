@@ -29,7 +29,7 @@ class Group {
         $sql = \mysql\connect();
 
         $state = $sql->prepare('INSERT INTO `user_groups` VALUES(0, \'\', ?);');
-        $state->bind_param('d', $roomId);
+        $state->bind_param('i', $roomId);
         $state->execute();
         $state->close();
         return $sql->insert_id;
@@ -44,7 +44,7 @@ class Group {
         $sql = \mysql\connect();
 
         $state = $sql->prepare('SELECT `group_id` FROM `user_groups` WHERE `room_id`=? ;');
-        $state->bind_param('d', $roomId);
+        $state->bind_param('i', $roomId);
         $state->execute();
 
         $id = 0;
@@ -66,7 +66,7 @@ class Group {
         $sql = \mysql\connect();
 
         $state = $sql->prepare('INSERT INTO `user_belongsto_group` VALUES(?, ?) ON DUPLICATE KEY UPDATE `group_id`=?;');
-        $state->bind_param('ddd', $this->id_, $user->getId(), $this->id_);
+        $state->bind_param('iii', $this->id_, $user->getId(), $this->id_);
         if ($state->execute()) {
             $user->setGroup($this->id_);
         }

@@ -1,5 +1,5 @@
 ﻿/// <reference path="./Scene/IScene.ts" />
-/// <reference path="./Scene/Setup/CreateUser.ts" />
+/// <reference path="./Scene/Title/Title.ts" />
 /// <reference path="./Event/EventHandler.ts" />
 /// <reference path="./Util/Frame.ts" />
 /// <reference path="./Util/With.ts" />
@@ -8,7 +8,7 @@
 /// <reference path="./Chat/ChatBoard.ts" />
 /// <reference path="./Dialog/Dialog.ts" />
 import IScene = scene.IScene;
-import CreateUserWindow = scene.setup.CreateUser;
+import Title = scene.title.Title;
 import EventHandler = eventhandler.EventHandler;
 import Frame = util.Frame;
 import AudioManager = sys.audio.AudioManager;
@@ -47,7 +47,7 @@ module main {
         start() {
             Frame.instance().update();
             this.eventHandler_ = new EventHandler(this.element_);
-            this.newScene(new CreateUserWindow());
+            this.newScene(new Title());
 
             // 10FPSでタイマー起動
             setInterval(() => this.tick(), 1000 / 10);

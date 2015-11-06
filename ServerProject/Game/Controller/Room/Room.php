@@ -16,7 +16,7 @@ class Room {
         $sql = \mysql\connect();
 
         // state2検索用部屋ID
-        $state2RoomId = 0;
+        $state2RoomId = 1;
 
         // state1結果用部屋ID
         $roomId = 0;
@@ -33,20 +33,30 @@ class Room {
         $state = $sql->prepare('SELECT room.`room_id`, room.`room_name`, room.`notice` FROM `game_rooms` room ORDER BY `room_id`;');
         $state->bind_result($roomId, $roomName, $roomNotice);
 
-        $state2 = $sql->prepare('SELECT group.`group_id`, COUNT(SELECT * FROM `user_belongsto_group` belongs WHERE belongs.`group_id`=group.`group_id`) FROM `user_groups` group WHERE group.`room_id`=?;');
-        $state2->bind_param('d', $state2RoomId);
+        $state2 = $sql->prepare(
+                'SELECT g.`group_id`, (
+                SELECT COUNT(*)
+                FROM `user_belongsto_group` belongs
+                WHERE belongs.`group_id`=g.`group_id` )
+              FROM `user_groups` AS g
+              WHERE g.`room_id`=? ORDER BY g.`group_id`;');
+
+        $state2->bind_param('i', $state2RoomId);
         $state2->bind_result($groupId, $groupMemberCount);
 
         $state->execute();
+        $state->store_result();
 
         $result = array();
         while ($state->fetch()) {
             $state2RoomId = $roomId;
             $state2->execute();
+            $state2->store_result();
 
-            if ($state2->num_rows !== 2) {
+            if ($state2->num_rows() !== 2) {
                 continue;
             }
+
             $groups = array();
 
             while ($state2->fetch()) {
@@ -57,13 +67,15 @@ class Room {
 
             $result[] = array(
                 'room-id' => $roomId,
+                'name' => $roomName,
+                'notice' => $roomNotice,
                 'group1' => $groups[0],
                 'group2' => $groups[1]);
         }
 
         $state2->close();
         $state->close();
-        
+
         $request->response('rooms', $result);
     }
 

@@ -29,7 +29,7 @@ module scene.title {
 
         update(): IScene {
             // クリックでGameシーンへ
-            return this.isClicked_ ? new Game() : null;
+            return this.isClicked_ ? new setup.CreateUser() : null;
         }
 
         createSceneRenderer(canvas: sys.IGraphics): ISceneRenderer {

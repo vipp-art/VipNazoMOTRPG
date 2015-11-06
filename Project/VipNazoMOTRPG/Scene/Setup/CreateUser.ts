@@ -1,5 +1,4 @@
 ﻿/// <refernece path="../../util/With.ts" />
-/// <refernece path="../title/Title.ts" />
 module scene.setup {
     export class CreateUser implements scene.IScene {
 
@@ -24,7 +23,7 @@ module scene.setup {
         }
 
         update(): scene.IScene {
-            return this.isSuccessCreateUser_ ? new scene.title.Title() : null;
+            return this.isSuccessCreateUser_ ? new RoomList() : null;
         }
 
         createSceneRenderer(): scene.ISceneRenderer {

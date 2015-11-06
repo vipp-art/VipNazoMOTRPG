@@ -60,7 +60,7 @@ class Room {
         $sql = \mysql\connect();
 
         $state = $sql->prepare('INSERT INTO `user_belongsto_room` VALUES(?, ?) ON DUPLICATE KEY UPDATE `room_id`=?;');
-        $state->bind_param('ddd', $this->id_, $user->getId(), $this->id_);
+        $state->bind_param('iii', $this->id_, $user->getId(), $this->id_);
         if ($state->execute()) {
             $user->setRoom($this->id_);
         }
