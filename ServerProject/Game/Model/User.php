@@ -37,12 +37,20 @@ class User {
 
     /** 名前を指定してユーザーを生成 */
     public static function create($name) {
-        $sql = connect();
+        if (!$name || $name === '') {
+            return null;
+        }
+        $sql = \mysql\connect();
         $state = $sql->prepare('INSERT INTO `users` VALUES(0, ?)');
         $state->bind_param('s', $name);
         $state->execute();
         $state->close();
         return $sql->insert_id;
+    }
+
+    /** ID取得 */
+    public function getId() {
+        return $this->id_;
     }
 
     /** 所属グループ取得 */

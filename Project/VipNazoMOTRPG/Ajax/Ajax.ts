@@ -162,7 +162,11 @@ module ajax {
         /** */
         get responseObject(): Object {
             var result;
-            eval('result = ' + this.responseText);
+            try {
+                eval('result = ' + this.responseText);
+            }catch(e){
+                return null;
+            }
             return result;
         }
     }

@@ -1,13 +1,14 @@
 ﻿/// <reference path="./Scene/IScene.ts" />
-/// <reference path="./Scene/Title/Title.ts" />
+/// <reference path="./Scene/Setup/CreateUser.ts" />
 /// <reference path="./Event/EventHandler.ts" />
 /// <reference path="./Util/Frame.ts" />
+/// <reference path="./Util/With.ts" />
 /// <reference path="./Sys/CanvasGraphics.ts" />
 /// <reference path="./Sys/Audio/HTML5AudioPlayer.ts" />
 /// <reference path="./Chat/ChatBoard.ts" />
 /// <reference path="./Dialog/Dialog.ts" />
 import IScene = scene.IScene;
-import Title = scene.title.Title;
+import CreateUserWindow = scene.setup.CreateUser;
 import EventHandler = eventhandler.EventHandler;
 import Frame = util.Frame;
 import AudioManager = sys.audio.AudioManager;
@@ -34,6 +35,9 @@ module main {
             // サウンド回り整備
             sys.audio.html5.AudioManger.setup();
 
+            // 通信に使うポートの指定
+            ajax.URL.setDefaultPort(8000);
+
             var chatBoard: chat.ChatBoard = new chat.ChatBoard(
                 document.getElementById('chat-log'),
                 document.getElementById('chat-sneder'), 1, 1);
@@ -43,7 +47,7 @@ module main {
         start() {
             Frame.instance().update();
             this.eventHandler_ = new EventHandler(this.element_);
-            this.newScene(new Title());
+            this.newScene(new CreateUserWindow());
 
             // 10FPSでタイマー起動
             setInterval(() => this.tick(), 1000 / 10);

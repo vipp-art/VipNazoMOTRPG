@@ -107,7 +107,7 @@
             if (Dialog.onCloseCallback_) {
                 Dialog.onCloseCallback_();
             }
-            this.isOpen_ = true;
+            this.isOpen_ = false;
         }
 
         /** ボタン有効化 */

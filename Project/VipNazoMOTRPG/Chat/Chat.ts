@@ -26,7 +26,7 @@ module chat {
         postReadLog(callback: (chat: Chat) => void): void {
             // TODO: 一部だけ取得対応
             var a: ajax.Ajax = new ajax.Ajax(
-                new ajax.URL('localhost', 'Requests/Chat/Chat.php', 8000),
+                new ajax.URL('localhost', 'Requests/Chat/Chat.php'),
                 (o) => {
                     var logs = o.responseObject['log'];
                     this.logs_ = new Array();
@@ -47,7 +47,7 @@ module chat {
          */
         sendMessage(message: string, callback: (chat: Chat) => void): void {
             var a: ajax.Ajax = new ajax.Ajax(
-                new ajax.URL('localhost', 'Requests/Chat/Chat.php', 8000),
+                new ajax.URL('localhost', 'Requests/Chat/Chat.php'),
                 (o) => { if (callback) { callback(this); } },
                 (o, m) => { alert('通信エラー:' + m); });
             a.setParameter({ 'group': this.group_, 'text': message, 'user': this.user_ });

@@ -18,4 +18,9 @@ module scene {
         createSceneRenderer(canvas: sys.IGraphics): ISceneRenderer;
     }
 
+    /** */
+    export class BlankSceneRender {
+        draw(): void {}
+    }
+
 }
