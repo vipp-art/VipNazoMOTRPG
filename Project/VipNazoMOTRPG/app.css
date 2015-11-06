@@ -59,3 +59,43 @@ input[type=button] {
     height: 24px;
     width: 64px;
 }
+
+#dialog-bg {
+    background-color: rgba(0, 0, 0, .5);
+    bottom: 0;
+    display: none;
+    left: 0;
+    position: fixed;
+    text-align: center;
+    top: 0;
+    right: 0;
+}
+
+#dialog {
+    background-color: #fff;
+    border: solid 1px #000;
+    height: 400px;
+    margin-top: -200px;
+    margin-left: -200px;
+    left: 50%;
+    padding: 2px;
+    position: fixed;
+    top: 50%;
+    width: 400px;
+}
+
+#dialog-text {
+    background-color: #f0f0f0;
+    height: 290px;
+    padding: 8px;
+    text-align: left;
+}
+
+#dialog-buttons {
+    margin: 8px;
+}
+
+#dialog-buttons input {
+    margin: 4px;
+    display: none;
+}

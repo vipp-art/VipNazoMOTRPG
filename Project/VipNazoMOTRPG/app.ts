@@ -5,11 +5,13 @@
 /// <reference path="./Sys/CanvasGraphics.ts" />
 /// <reference path="./Sys/Audio/HTML5AudioPlayer.ts" />
 /// <reference path="./Chat/ChatBoard.ts" />
+/// <reference path="./Dialog/Dialog.ts" />
 import IScene = scene.IScene;
 import Title = scene.title.Title;
 import EventHandler = eventhandler.EventHandler;
 import Frame = util.Frame;
 import AudioManager = sys.audio.AudioManager;
+import Dialog = dialog.Dialog;
 
 /** メイン */
 module main {
@@ -49,14 +51,16 @@ module main {
 
         /** 毎フレーム処理 */
         tick() {
+            var isOpeningDialog: boolean = Dialog.isOpening;
+
             // 背面を白に
             this.graphics_.fillRect(0, 0, this.graphics_.getWidth(), this.graphics_.getHeight(), new sys.Color(1, 1, 1));
 
             // イベント更新
-            this.eventHandler_.update();
+            this.eventHandler_.update(!isOpeningDialog);
 
             // シーン更新
-            var next: IScene = this.scene_.update();
+            var next: IScene = isOpeningDialog ? null : this.scene_.update();
             // シーン描画
             this.scene_.createSceneRenderer(this.graphics_).draw();
 

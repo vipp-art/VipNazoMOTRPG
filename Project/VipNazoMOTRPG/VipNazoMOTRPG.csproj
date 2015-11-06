@@ -31,6 +31,7 @@
     <TypeScriptCompile Include="Chat\Log.ts" />
     <TypeScriptCompile Include="Cursor\SelectCursor.ts" />
     <TypeScriptCompile Include="Cursor\SelectCursorRenderer.ts" />
+    <TypeScriptCompile Include="Dialog\Dialog.ts" />
     <TypeScriptCompile Include="Event\EventHandler.ts" />
     <TypeScriptCompile Include="Field\CanvasCellRenderer.ts" />
     <TypeScriptCompile Include="Field\Cell.ts" />
@@ -42,6 +43,7 @@
     <TypeScriptCompile Include="Player\CanvasPlayerRenderer.ts" />
     <TypeScriptCompile Include="Scene\Game\Game.ts" />
     <TypeScriptCompile Include="Scene\IScene.ts" />
+    <TypeScriptCompile Include="Scene\Setup\CreateUser.ts" />
     <TypeScriptCompile Include="Scene\Title\Title.ts" />
     <TypeScriptCompile Include="Sys\Audio\IAudioLoader.ts" />
     <TypeScriptCompile Include="Sys\Audio\AudioManager.ts" />

@@ -62,28 +62,30 @@
             }
         }
 
-        update(): void {
-            if (this.keyDownEvent_) {
-                for (var i in this.keyDownCallback_) {
-                    var keyDown = this.keyDownCallback_[i];
-                    if (keyDown) {
-                        keyDown.onKeyDown(this.keyDownEvent_);
+        update(doseFire: boolean): void {
+            if (doseFire) {
+                if (this.keyDownEvent_) {
+                    for (var i in this.keyDownCallback_) {
+                        var keyDown = this.keyDownCallback_[i];
+                        if (keyDown) {
+                            keyDown.onKeyDown(this.keyDownEvent_);
+                        }
                     }
                 }
-            }
-            if (this.clickEvent_) {
-                for (var i in this.clickCallback_) {
-                    var click = this.clickCallback_[i];
-                    if (click) {
-                        click.onClick(this.clickEvent_);
+                if (this.clickEvent_) {
+                    for (var i in this.clickCallback_) {
+                        var click = this.clickCallback_[i];
+                        if (click) {
+                            click.onClick(this.clickEvent_);
+                        }
                     }
                 }
-            }
-            if (this.mouseMoveEvent_) {
-                for (var i in this.mouseMoveCallback_) {
-                    var move = this.mouseMoveCallback_[i];
-                    if (move) {
-                        move.onMouseMove(this.mouseMoveEvent_);
+                if (this.mouseMoveEvent_) {
+                    for (var i in this.mouseMoveCallback_) {
+                        var move = this.mouseMoveCallback_[i];
+                        if (move) {
+                            move.onMouseMove(this.mouseMoveEvent_);
+                        }
                     }
                 }
             }
