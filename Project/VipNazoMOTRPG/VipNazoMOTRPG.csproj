@@ -62,6 +62,7 @@
     <TypeScriptCompile Include="Util\Timer.ts" />
     <TypeScriptCompile Include="Util\TimeUnit.ts" />
     <TypeScriptCompile Include="Util\Tween\Tweener.ts" />
+    <TypeScriptCompile Include="Util\With.ts" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Test.pubxml" />

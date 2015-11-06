@@ -129,12 +129,13 @@
         private setupButton(text: string, callback: (dialog: Dialog) => boolean, no: number): void {
             var button: HTMLInputElement = [this.button1_, this.button2_, this.button3_][no];
             button.value = text;
+            button.style.display = 'inline';
             this['onSubmit' + ['Left', 'Center', 'Right'][no]] = callback;
         }
 
         /** インプットフォーム有効化 */
         enableInputForm(): void {
-            this.input_.style.display = 'block';
+            this.input_.style.display = 'inline';
         }
 
         /** インプットフォームの内容を取得 */
@@ -143,8 +144,11 @@
         }
 
         /** メッセージの設定 */
-        setMessage(text: string): void {
+        setMessage(text: string, width?: number): void {
             this.text_.innerText = text;
+            if (width) {
+                this.text_.style.width = width + 'px';
+            }
         }
 
         /** メッセージをHTMLで指定 */
