@@ -22,6 +22,66 @@ class Group {
     }
 
     /**
+     * グループ生成
+     * @param number $roomId
+     */
+    public static function create($roomId) {
+        $sql = \mysql\connect();
+
+        $state = $sql->prepare('INSERT INTO `user_groups` VALUES(0, \'\', ?);');
+        $state->bind_param('d', $roomId);
+        $state->execute();
+        $state->close();
+        return $sql->insert_id;
+    }
+
+    /**
+     * ルームIDからグループを検索
+     * @param number $roomId
+     * @return array
+     */
+    public static function findAtRoomId($roomId) {
+        $sql = \mysql\connect();
+
+        $state = $sql->prepare('SELECT `group_id` FROM `user_groups` WHERE `room_id`=? ;');
+        $state->bind_param('d', $roomId);
+        $state->execute();
+
+        $id = 0;
+        $state->bind_result($id);
+
+        $result = array();
+
+        while ($state->fetch()) {
+            $result[] = $id;
+        }
+        return $result;
+    }
+
+    /**
+     * このグループに参加
+     * @param User $user
+     */
+    public function join($user) {
+        $sql = \mysql\connect();
+
+        $state = $sql->prepare('INSERT INTO `user_belongsto_group` VALUES(?, ?) ON DUPLICATE KEY UPDATE `group_id`=?;');
+        $state->bind_param('ddd', $this->id_, $user->getId(), $this->id_);
+        if ($state->execute()) {
+            $user->setGroup($this->id_);
+        }
+        $state->close();
+    }
+    
+    /**
+     * ID取得
+     * @return number
+     */
+    public function getId() {
+        return $this->id_;
+    }
+
+    /**
      * ログを全件取得
      * @return array
      */
@@ -45,6 +105,7 @@ class Group {
                 'senttime' => $sentTime,
                 'user' => $userId);
         }
+        $state->close();
         return $result;
     }
 

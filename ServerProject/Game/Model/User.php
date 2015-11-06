@@ -67,5 +67,15 @@ class User {
     public function getName() {
         return $this->name_;
     }
+    
+    /** グループ設定 */
+    public function setGroup($groupId) {
+        $this->group_ = $groupId;
+    }
+    
+    /** ルーム設定 */
+    public function setRoom($roomId) {
+        $this->room_ = $roomId;
+    }
 
 }
