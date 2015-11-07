@@ -1,4 +1,6 @@
 ﻿/// <refernece path="../../util/With.ts" />
+/// <refernece path="./RoomList.ts" />
+
 module scene.setup {
     export class CreateUser implements scene.IScene {
 

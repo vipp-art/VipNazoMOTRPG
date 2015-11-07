@@ -1,4 +1,11 @@
-﻿module scene.setup {
+﻿/// <reference path="../IScene.ts" />
+/// <reference path="../../Ajax/Ajax.ts" />
+/// <reference path="../../Event/EventHandler.ts" />
+/// <reference path="../../Sys/Audio/AudioManager.ts" />
+
+module scene.setup {
+    import AudioManager = sys.audio.AudioManager;
+
     export class GroupInformation {
         private id_: number;
         private count_: number;
@@ -94,6 +101,12 @@
             if (list) {
                 var y: number = 0;
                 var height: number = 80;
+                var style = g.getTextStyle();
+                style.size = 16;
+                style.bold = false;
+                style.horizontalAlign = sys.HorizontalAlign.kLeft;
+                style.verticalAlign = sys.VerticalAlign.kTop;
+                g.setTextStyle(style);
                 for (var i in list) {
                     var item = list[i];
                     var cy: number = 5 + y * (height + 5);

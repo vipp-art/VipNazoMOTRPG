@@ -44,6 +44,7 @@
     <TypeScriptCompile Include="Scene\Game\Game.ts" />
     <TypeScriptCompile Include="Scene\IScene.ts" />
     <TypeScriptCompile Include="Scene\Setup\CreateUser.ts" />
+    <TypeScriptCompile Include="Scene\Setup\RoomList.ts" />
     <TypeScriptCompile Include="Scene\Title\Title.ts" />
     <TypeScriptCompile Include="Sys\Audio\IAudioLoader.ts" />
     <TypeScriptCompile Include="Sys\Audio\AudioManager.ts" />

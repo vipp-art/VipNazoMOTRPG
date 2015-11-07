@@ -35,8 +35,8 @@ module sys {
                 canvas.textAlign = this.horizontalAlign == HorizontalAlign.kCenter
                         ? 'center'
                         : this.horizontalAlign == HorizontalAlign.kRight
-                            ? 'left'
-                            : 'right';
+                            ? 'right'
+                            : 'left';
 
                 canvas.textBaseline = this.verticalAlign == VerticalAlign.kCetner
                         ? 'center'
