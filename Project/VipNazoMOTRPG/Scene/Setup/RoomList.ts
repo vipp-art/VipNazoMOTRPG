@@ -2,9 +2,11 @@
 /// <reference path="../../Ajax/Ajax.ts" />
 /// <reference path="../../Event/EventHandler.ts" />
 /// <reference path="../../Sys/Audio/AudioManager.ts" />
+/// <reference path="../../Util/Button/ButtonManager.ts" />
 
 module scene.setup {
     import AudioManager = sys.audio.AudioManager;
+    import ButtonManager = util.button.ButtonManager;
 
     export class GroupInformation {
         private id_: number;
@@ -42,11 +44,46 @@ module scene.setup {
         get group2(): GroupInformation { return this.group2_; }
     }
 
+    /** 部屋ボタン */
+    export class RoomButton extends util.button.RectButton {
+        private room_: RoomInformation;
+        private index_: number;
+
+        constructor(room: RoomInformation, index: number, callback: (button: RoomButton) => void) {
+            super(new Rect(7, 5 + index * (80 + 5), 300, 80));
+            super.setOnClickHandler(callback);
+            this.room_ = room;
+            this.index_ = index;
+        }
+
+        draw(g: sys.IGraphics): void {
+            var height: number = 80;
+            var item = this.room_;
+            var rect = this.rect;
+            g.drawRect(rect.x, rect.y, rect.width, rect.height, new sys.Color(0, 0, 0, 1));
+            g.drawText('部屋' + (this.index_ + 1) + ' : ' + item.name, rect.x + 2, rect.y + 2, new sys.Color(0, 0, 0, 1));
+            g.drawText('チームA : ' + item.group1.count + '人', rect.x + 8, rect.y + 20, new sys.Color(0, 0, 0, 1));
+            g.drawText('チームB : ' + item.group2.count + '人', rect.x + 8, rect.y + 34, new sys.Color(0, 0, 0, 1));
+        }
+
+        get room(): RoomInformation {
+            return this.room_;
+        }
+    }
+
     /** 部屋一覧取得 */
     export class RoomList implements scene.IScene, eventhandler.IOnClick {
-        private list_: Array<RoomInformation>;
+        /** 部屋一覧 */
+        private list_: Array<RoomButton>;
+
+        /** ボタン */
+        private buttons_: ButtonManager;
+
+        /** 部屋作成ボタン */
+        private createButton_: util.button.RectButton;
 
         constructor() {
+            this.buttons_ = new ButtonManager;
         }
 
         initialize(): void {
@@ -61,13 +98,30 @@ module scene.setup {
                 new ajax.URL('localhost', 'Requests/Room/Room.php'),
                 (o) => {
                     var result = o.responseObject['rooms'];
+                    this.buttons_.removeAll();
                     for (var i in result) {
-                        this.list_.push(new RoomInformation(result[i]));
+                        var item = new RoomInformation(result[i]);
+                        var button = new RoomButton(item, i, (button) => { this.onButtonClicked(button); });
+                        this.list_.push(button);
+                        this.buttons_.add(button);
                     }
+                    // 部屋作成ボタン追加
+                    var createButton = new util.button.RectButton(new Rect(400, 8, 100, 20));
+                    createButton.setOnClickHandler((button) => { this.onCreateButtonClicked(); });
+                    this.buttons_.add(createButton);
+                    this.createButton_ = createButton;
                 },
                 (o, m) => { alert('通信エラー:' + m); this.getRoomList(); });
             a.setParameter({ 'name': name });
             a.connect();
+        }
+
+        /** ボタン押下時 */
+        private onButtonClicked(button: RoomButton): void {
+        }
+
+        /** 部屋作成ボタン押下時 */
+        private onCreateButtonClicked(): void {
         }
 
         update(): IScene {
@@ -78,11 +132,18 @@ module scene.setup {
             return new SceneRenderer(canvas, this);
         }
 
-        get list(): Array<RoomInformation> {
+        /** 部屋一覧 */
+        get list(): Array<RoomButton> {
             return this.list_;
         }
 
+        /** 部屋作成ボタン */
+        get createButton(): util.button.RectButton {
+            return this.createButton_;
+        }
+
         onClick(event: MouseEvent) {
+            this.buttons_.onClick(event);
         }
     }
 
@@ -99,7 +160,6 @@ module scene.setup {
             var g = this.canvas_;
             var list = this.parent_.list;
             if (list) {
-                var y: number = 0;
                 var height: number = 80;
                 var style = g.getTextStyle();
                 style.size = 16;
@@ -109,17 +169,19 @@ module scene.setup {
                 g.setTextStyle(style);
                 for (var i in list) {
                     var item = list[i];
-                    var cy: number = 5 + y * (height + 5);
-                    g.drawRect(5, cy, 300, height, new sys.Color(0, 0, 0, 1));
-                    g.drawText('部屋' + y + ' : ' + item.name, 7, cy + 2, new sys.Color(0, 0, 0, 1));
-                    g.drawText('チームA : ' + item.group1.count + '人', 12, cy + 20, new sys.Color(0, 0, 0, 1));
-                    g.drawText('チームB : ' + item.group2.count + '人', 12, cy + 34, new sys.Color(0, 0, 0, 1));
-                    ++y;
+                    item.draw(g);
                 }
 
-                var cy: number = 5 + y * (height + 5) + 10;
-                g.fillRect(5, cy, 80, 80, new sys.Color(0, 1, 0, 1));
-                g.drawText('部屋作成', 7, cy + 2, new sys.Color(0, 0, 0, 1));
+                var button = this.parent_.createButton;
+                if (button) {
+                    var rect = button.rect;
+                    var center = rect.center;
+                    style.horizontalAlign = sys.HorizontalAlign.kCenter;
+                    style.verticalAlign = sys.VerticalAlign.kCetner;
+                    g.setTextStyle(style);
+                    g.fillRect(rect.x, rect.y, rect.width, rect.height, new sys.Color(0, 1, 0, 1));
+                    g.drawText('部屋作成', center.x, center.y, new sys.Color(0, 0, 0, 1));
+                }
             }
         }
     }

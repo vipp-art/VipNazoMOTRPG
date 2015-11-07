@@ -53,6 +53,8 @@
     <TypeScriptCompile Include="Sys\Audio\IAudioPlayer.ts" />
     <TypeScriptCompile Include="Sys\Audio\IAudioSource.ts" />
     <TypeScriptCompile Include="Sys\IGraphics.ts" />
+    <TypeScriptCompile Include="Util\Button\Button.ts" />
+    <TypeScriptCompile Include="Util\Button\ButtonManager.ts" />
     <TypeScriptCompile Include="Util\Easing.ts" />
     <TypeScriptCompile Include="Util\Easings\Easings.ts" />
     <TypeScriptCompile Include="Util\Frame.ts" />

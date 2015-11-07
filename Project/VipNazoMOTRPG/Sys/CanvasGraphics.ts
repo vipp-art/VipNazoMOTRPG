@@ -39,7 +39,7 @@ module sys {
                             : 'left';
 
                 canvas.textBaseline = this.verticalAlign == VerticalAlign.kCetner
-                        ? 'center'
+                        ? 'middle'
                         : this.verticalAlign == VerticalAlign.kBottom
                             ? 'bottom'
                             : 'top';
