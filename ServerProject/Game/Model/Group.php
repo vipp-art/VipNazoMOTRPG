@@ -72,7 +72,7 @@ class Group {
         }
         $state->close();
     }
-    
+
     /**
      * ID取得
      * @return number
@@ -124,6 +124,31 @@ class Group {
         $state->bind_param('isi', $this->id_, $text, $user);
         $state->execute();
         $state->close();
+    }
+
+    /**
+     * ユーザー一覧取得
+     * @return array
+     */
+    public function getUsers() {
+        $users = [];
+
+        $sql = \mysql\connect();
+        $state = $sql->prepare('SELECT `user_id` FROM `user_belongsto_group` WHERE `group_id`=?');
+        $state->bind_param('i', $this->id_);
+        $state->execute();
+
+        $userId = -1;
+        $state->bind_result($userId);
+
+        $state->store_result();
+
+        while ($state->fetch()) {
+            $users[] = $userId;
+        }
+
+        $state->close();
+        return $users;
     }
 
 }

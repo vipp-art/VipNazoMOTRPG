@@ -48,6 +48,34 @@ class User {
         return $sql->insert_id;
     }
 
+    /**
+     * ユーザーを検索
+     * @param array $ids
+     */
+    public static function find($ids) {
+        $sql = \mysql\connect();
+        $query = '-1';
+        foreach ($ids as $i) {
+            if (is_numeric($i)) {
+                $query .= ',';
+                $query .= $i;
+            }
+        }
+
+        $users = [];
+        $result = $sql->query('SELECT `user_id`, `name` FROM `users` WHERE `user_id` IN (' . $query . ');');
+        if ($result) {
+            while ($row = $result->fetch_array()) {
+                $users[] = array(
+                    'id' => $row[0],
+                    'name' => $row[1]
+                );
+            }
+            $result->close();
+        }
+        return $users;
+    }
+
     /** ID取得 */
     public function getId() {
         return $this->id_;
@@ -67,12 +95,12 @@ class User {
     public function getName() {
         return $this->name_;
     }
-    
+
     /** グループ設定 */
     public function setGroup($groupId) {
         $this->group_ = $groupId;
     }
-    
+
     /** ルーム設定 */
     public function setRoom($roomId) {
         $this->room_ = $roomId;

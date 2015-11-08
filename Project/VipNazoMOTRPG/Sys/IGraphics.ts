@@ -49,6 +49,16 @@
         set g(v: number) { this.g_ = v; }
         set b(v: number) { this.b_ = v; }
         set a(v: number) { this.a_ = v; }
+
+
+        static get red(): Color { return new sys.Color(1, 0, 0, 1); }
+        static get green(): Color { return new sys.Color(0, 1, 0, 1); }
+        static get blue(): Color { return new sys.Color(0, 0, 1, 1); }
+        static get black(): Color { return new sys.Color(0, 0, 0, 1); }
+        static get white(): Color { return new sys.Color(1, 1, 1, 1); }
+        static get yellow(): Color { return new sys.Color(1, 1, 0, 1); }
+        static get purple(): Color { return new sys.Color(1, 0, 1, 1); }
+        static get gray(): Color { return new sys.Color(.7, .7, .7, 1); }
     }
 
     /** 整数表現の色 */

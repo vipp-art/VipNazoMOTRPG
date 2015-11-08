@@ -104,6 +104,7 @@ class Room {
     /**
      * ルームに参加
      * @param \Request $request
+     * @Transactional
      */
     function doPost($request) {
         $id = $request->parameter('id');
