@@ -65,8 +65,8 @@ class Group {
     public function join($user) {
         $sql = \mysql\connect();
 
-        $state = $sql->prepare('INSERT INTO `user_belongsto_group` VALUES(?, ?) ON DUPLICATE KEY UPDATE `group_id`=?;');
-        $state->bind_param('iii', $this->id_, $user->getId(), $this->id_);
+        $state = $sql->prepare('INSERT INTO `user_belongsto_group` (`group_id`, `user_id`) VALUES(?, ?) ON DUPLICATE KEY UPDATE `group_id`=VALUES(`group_id`);');
+        $state->bind_param('ii', $this->id_, $user->getId());
         if ($state->execute()) {
             $user->setGroup($this->id_);
         }

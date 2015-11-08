@@ -30,7 +30,7 @@ class User {
 
         $state->bind_result($userId, $this->name_, $this->group_, $this->room_);
         if ($state->fetch()) {
-            $this->id = $userId;
+            $this->id_ = $userId;
         }
         $state->close();
     }
@@ -63,7 +63,7 @@ class User {
         }
 
         $users = [];
-        $result = $sql->query('SELECT `user_id`, `name` FROM `users` WHERE `user_id` IN (' . $query . ');');
+        $result = $sql->query('SELECT `user_id`, `user_name` FROM `users` WHERE `user_id` IN (' . $query . ');');
         if ($result) {
             while ($row = $result->fetch_array()) {
                 $users[] = array(

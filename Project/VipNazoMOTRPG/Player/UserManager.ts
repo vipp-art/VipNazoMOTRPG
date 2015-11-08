@@ -16,7 +16,7 @@ module player {
 
         /** ユーザー追加 */
         add(user: UserInformation): void {
-            if (this.users_.indexOf(user) < 0) {
+            if (!this.users_.some((v) => { return v.id == user.id })) {
                 this.users_.push(user);
             }
         }

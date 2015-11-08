@@ -30,7 +30,7 @@ class Room {
         // state2結果用グループ所属人数
         $groupMemberCount = 0;
 
-        $state = $sql->prepare('SELECT room.`room_id`, room.`room_name`, room.`notice` FROM `game_rooms` room ORDER BY `room_id`;');
+        $state = $sql->prepare('SELECT room.`room_id`, room.`room_name`, room.`notice` FROM `game_rooms` room ORDER BY `room_id` DESC;');
         $state->bind_result($roomId, $roomName, $roomNotice);
 
         $state2 = $sql->prepare(

@@ -16,7 +16,7 @@ module scene.game {
         }
 
         add(user: player.UserInformation): void {
-            if (this.users_.indexOf(user) < 0) {
+            if (!this.users_.some((u) => {return u.id == user.id })) {
                 this.users_.push(user);
             }
         }
@@ -151,7 +151,7 @@ module scene.game {
             g.drawText(parent.roomName, g.getWidth() * .5, 5, new sys.Color(0, 0, 0, 1));
 
             this.drawGroup(parent.group1, 'チーム1', 5, 20);
-            this.drawGroup(parent.group1, 'チーム2', 210, 20);
+            this.drawGroup(parent.group2, 'チーム2', 210, 20);
         }
 
         /** グループの情報を表示 */
