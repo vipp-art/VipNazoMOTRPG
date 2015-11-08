@@ -44,6 +44,7 @@
     <TypeScriptCompile Include="Player\UserInformation.ts" />
     <TypeScriptCompile Include="Player\UserManager.ts" />
     <TypeScriptCompile Include="Scene\Game\Game.ts" />
+    <TypeScriptCompile Include="Scene\Game\RoomInformation.ts" />
     <TypeScriptCompile Include="Scene\IScene.ts" />
     <TypeScriptCompile Include="Scene\Setup\CreateUser.ts" />
     <TypeScriptCompile Include="Scene\Setup\RoomList.ts" />

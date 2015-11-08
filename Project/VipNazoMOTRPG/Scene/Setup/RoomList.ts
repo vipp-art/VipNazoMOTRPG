@@ -136,7 +136,7 @@ module scene.setup {
                 (o, m) => { alert('通信エラー:' + m); });
             a.setParameter({
                 'id': button.room.roomId,
-                'user': player.UserManger.instance().self.id
+                'user': player.UserManager.instance().self.id
             });
             a.post();
         }
@@ -162,14 +162,14 @@ module scene.setup {
                     var gid1 = result['group-id1'];
                     var gid2 = result['group-id2'];
 
-                    player.UserManger.instance().self.group = gid1;
+                    player.UserManager.instance().self.group = gid1;
                     this.nextScene_ = new game.RoomInformation(roomId, name, gid1, gid2);
                 },
                 (o, m) => { alert('通信エラー:' + m); });
             a.setParameter({
                 'name': name,
                 'text': notice,
-                'user': player.UserManger.instance().self.id
+                'user': player.UserManager.instance().self.id
             });
             a.put();
         }

@@ -99,39 +99,47 @@ module ajax {
 
         /** GET通信 */
         connect(): void {
-            var request: string = '';
-            if (this.parameters_ instanceof Blob) {
-                // blobは無視 -> Base64?
-            } else if (this.parameters_ instanceof String) {
-                request = '?' + this.parameters_;
-            } else if (this.parameters_ instanceof Object) {
-                request = '?';
-                for (var i in this.parameters_) {
-                    request += encodeURIComponent(i) + '=' + encodeURIComponent(this.parameters_[i]);
-                    request += '&';
+            try {
+                var request: string = '';
+                if (this.parameters_ instanceof Blob) {
+                    // blobは無視 -> Base64?
+                } else if (this.parameters_ instanceof String) {
+                    request = '?' + this.parameters_;
+                } else if (this.parameters_ instanceof Object) {
+                    request = '?';
+                    for (var i in this.parameters_) {
+                        request += encodeURIComponent(i) + '=' + encodeURIComponent(this.parameters_[i]);
+                        request += '&';
+                    }
+                    request = request.substr(0, request.length - 1);
                 }
-                request = request.substr(0, request.length - 1);
+                this.request_.open('GET', this.url_ + request);
+                this.request_.send();
+            } catch (e) {
+                this.onError(e || this.request_.responseText || 'error occurs.');
             }
-            this.request_.open('GET', this.url_ + request);
-            this.request_.send();
         }
 
         /** POST通信 */
         post(): void {
-            this.request_.open('POST', this.url_);
+            try {
+                this.request_.open('POST', this.url_);
 
-            if (this.parameters_ instanceof Blob) {
-                this.request_.send(this.parameters_);
-            } else if (this.parameters_ instanceof String) {
-                this.request_.send(this.parameters_);
-            } else if (this.parameters_ instanceof Object) {
-                var form: FormData = new FormData();
-                for (var i in this.parameters_) {
-                    form.append(i, this.parameters_[i]);
+                if (this.parameters_ instanceof Blob) {
+                    this.request_.send(this.parameters_);
+                } else if (this.parameters_ instanceof String) {
+                    this.request_.send(this.parameters_);
+                } else if (this.parameters_ instanceof Object) {
+                    var form: FormData = new FormData();
+                    for (var i in this.parameters_) {
+                        form.append(i, this.parameters_[i]);
+                    }
+                    this.request_.send(form);
+                } else {
+                    this.request_.send();
                 }
-                this.request_.send(form);
-            } else {
-                this.request_.send();
+            } catch (e) {
+                this.onError(e || this.request_.responseText || 'error occurs.');
             }
         }
 
@@ -139,19 +147,23 @@ module ajax {
          * PUT通信
          */
         put(): void {
-            this.request_.open('PUT', this.url_);
+            try {
+                this.request_.open('PUT', this.url_);
 
-            var request = '';
-            if (this.parameters_ instanceof String) {
-                request = <string> this.parameters_;
-            } else if (this.parameters_ instanceof Object) {
-                for (var i in this.parameters_) {
-                    request += encodeURIComponent(i) + '=' + encodeURIComponent(this.parameters_[i]);
-                    request += '\n';
+                var request = '';
+                if (this.parameters_ instanceof String) {
+                    request = <string> this.parameters_;
+                } else if (this.parameters_ instanceof Object) {
+                    for (var i in this.parameters_) {
+                        request += encodeURIComponent(i) + '=' + encodeURIComponent(this.parameters_[i]);
+                        request += '\n';
+                    }
+                    request = request.substr(0, request.length - 1);
                 }
-                request = request.substr(0, request.length - 1);
+                this.request_.send(request);
+            } catch (e) {
+                this.onError(e || this.request_.responseText || 'error occurs.');
             }
-            this.request_.send(request);
         }
 
         /** レスポンスの文字列表現 */

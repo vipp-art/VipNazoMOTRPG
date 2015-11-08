@@ -5,7 +5,6 @@
 /// <reference path="./Util/With.ts" />
 /// <reference path="./Sys/CanvasGraphics.ts" />
 /// <reference path="./Sys/Audio/HTML5AudioPlayer.ts" />
-/// <reference path="./Chat/ChatBoard.ts" />
 /// <reference path="./Dialog/Dialog.ts" />
 import IScene = scene.IScene;
 import Title = scene.title.Title;
@@ -37,10 +36,6 @@ module main {
 
             // 通信に使うポートの指定
             ajax.URL.setDefaultPort(8000);
-
-            var chatBoard: chat.ChatBoard = new chat.ChatBoard(
-                document.getElementById('chat-log'),
-                document.getElementById('chat-sneder'), 1, 1);
         }
 
         /** ゲームの開始 */

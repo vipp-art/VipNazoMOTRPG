@@ -46,8 +46,8 @@ module scene.setup {
                     this.isSuccessCreateUser_ = true;
                     this.dialog_.close();
                     // 自分を登録
-                    player.UserManger.instance().setSelf(new player.UserInformation(userId));
-                    player.UserManger.instance().self.name = name;
+                    player.UserManager.instance().setSelf(new player.UserInformation(userId));
+                    player.UserManager.instance().self.name = name;
                 },
                 (o, m) => { alert('通信エラー:' + m); this.reinput(); });
             a.setParameter({ 'name': name });

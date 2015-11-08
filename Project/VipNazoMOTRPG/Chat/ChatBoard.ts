@@ -19,21 +19,33 @@ module chat {
             this.postReadLog();
             this.sender_.onsubmit = () => {
                 var value: string = this.sender_['chat-text'].value || '';
+                this.sender_['chat-text'].value = '';
                 if (value.length > 0) {
-                    this.chat_.sendMessage(value, (chat) => { this.postReadLog(); });
+                    this.chat_.sendMessage(value, (chat) => { });
                 }
             };
-        }
+       } 
 
         postReadLog(): void {
+            var manager = player.UserManager.instance();
             this.chat_.postReadLog((chat) => {
-                var html: string = '';
-                chat.getLogs().forEach((v) => {
-                    html += '<p><span>' + v.user + '</span> : <span>' + v.text + '</span></p>'
-                });
-                this.board_.innerHTML = html;
-            });
+                    var html: string = '';
+                    chat.getLogs().forEach((v) => {
+                        html += '<p><span>' + manager.find(v.user).name + '</span> : <span>' + v.text + '</span></p>'
+                        });
+                    this.board_.innerHTML = html;
 
+                    // タイマーで定期的に取得
+                    var timer = util.Timer.createTimer('chat', this.postReadLog, this);
+                    timer.setInterval(util.TimeUnit.fromMillis(500));
+                    timer.start();
+                },
+                (chat) => {
+                    // タイマーで定期的に取得
+                    var timer = util.Timer.createTimer('chat', this.postReadLog, this);
+                    timer.setInterval(util.TimeUnit.fromMillis(500));
+                    timer.start();
+                });
         }
     }
 } 

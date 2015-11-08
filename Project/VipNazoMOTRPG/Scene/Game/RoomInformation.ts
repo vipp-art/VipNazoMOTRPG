@@ -1,5 +1,7 @@
 ﻿/// <reference path="../IScene.ts" />
+/// <reference path="../../Event/EventHandler.ts" />
 /// <reference path="../../Player/UserManager.ts" />
+/// <reference path="../../Chat/ChatBoard.ts" />
 
 module scene.game {
     /** グループの情報 */
@@ -26,7 +28,7 @@ module scene.game {
         }
     }
 
-    export class RoomInformation implements scene.IScene {
+    export class RoomInformation implements scene.IScene, eventhandler.IOnClick {
         /** 部屋ID */
         private roomId_: number;
         /** 部屋名 */
@@ -39,6 +41,12 @@ module scene.game {
 
         /** 次のシーン */
         private nextScene_: Game = null;
+
+        /** ボタン */
+        private buttons_: util.button.ButtonManager;
+
+        /** チャット */
+        private chat_: chat.ChatBoard = null;
 
         constructor(roomId: number, roomName: string, group1: number, group2: number) {
             this.roomId_ = roomId;
@@ -87,7 +95,7 @@ module scene.game {
                         u.name = result[i]['name'];
                         u.group = group.id;
                         group.add(u);
-                        player.UserManger.instance().add(u);
+                        player.UserManager.instance().add(u);
                     }
                     if (onComplete) {
                         onComplete();
@@ -101,16 +109,53 @@ module scene.game {
         /** シーンの初期化 */
         initialize(): void {
             this.connectGetUser();
+            this.buttons_ = new util.button.ButtonManager();
+            var button: util.button.Button;
+
+            // 参加ボタン
+            this.buttons_.add(button = new util.button.RectButton(new util.Rect(5 + 3, 20 + 23, 80, 20)));
+            button.setOnClickHandler((button) => { this.join(this.group1); });
+
+            this.buttons_.add(button = new util.button.RectButton(new util.Rect(210 + 3, 20 + 23, 80, 20)));
+            button.setOnClickHandler((button) => { this.join(this.group2); });
+        }
+
+        /** グループに参加 */
+        join(group: GroupInformation): void {
+            if (player.UserManager.instance().self.group < 0) {
+                // 未参加なので参加通信
+                var a: ajax.Ajax = new ajax.Ajax(
+                    new ajax.URL('localhost', 'Requests/Room/Group.php'),
+                    (o) => {
+                        player.UserManager.instance().self.group = group.id;
+                    },
+                    (o, m) => { alert('通信エラー:' + m); this.join(group); });
+                a.setParameter({ 'id': group.id, 'user': player.UserManager.instance().self.id });
+                a.post();
+            }
         }
 
         /** 更新 */
         update(): scene.IScene {
+            if (this.chat_ == null) {
+                var self = player.UserManager.instance().self;
+                if (self.group > 0) {
+                    this.chat_ = new chat.ChatBoard(
+                        document.getElementById('chat-log'),
+                        document.getElementById('chat-sneder'), self.group, self.id);
+                }
+            }
             return this.nextScene_;
         }
 
         /** 描画用のレンダラの生成 */
         createSceneRenderer(canvas: sys.IGraphics): scene.ISceneRenderer {
             return new SceneRenderer(canvas, this);
+        }
+
+        /** クリックされた */
+        onClick(event: MouseEvent): void {
+            this.buttons_.onClick(event);
         }
 
         get roomId(): number {
@@ -166,14 +211,18 @@ module scene.game {
 
             g.drawText(caption, x + 100, y, new sys.Color(0, 0, 0, 1));
 
+            // 参加ボタン
+            g.fillRect(x + 3, y + 23, 80, 20, sys.Color.red); 
+            g.drawText('参加', x + 5 + 40, y + 25, sys.Color.black);
 
             style.horizontalAlign = sys.HorizontalAlign.kLeft;
             g.setTextStyle(style);
 
+            // メンバー
             var members = group.members;
             for (var i in members) {
                 var member = members[i];
-                g.drawText(member.name, x + 5, y + 30 + i * 20, sys.Color.black);
+                g.drawText(member.name, x + 5, y + 50 + i * 20, sys.Color.black);
             }
         }
     }

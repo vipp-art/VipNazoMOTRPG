@@ -1,11 +1,11 @@
 ﻿/// <reference path="./UserInformation.ts" />
 module player {
     /** ユーザー管理 */
-    export class UserManger {
-        private static instance_: UserManger = new UserManger();
+    export class UserManager {
+        private static instance_: UserManager = new UserManager();
 
-        public static instance(): UserManger {
-            return UserManger.instance_;
+        public static instance(): UserManager {
+            return UserManager.instance_;
         }
 
         /** 自分 */
@@ -40,6 +40,16 @@ module player {
             this.remove(this.self_);
             this.add(self);
             this.self_ = self;
+        }
+
+        /** ユーザー検索 */
+        find(id: number): UserInformation {
+            for (var i in this.users_) {
+                if (this.users_[i].id == id) {
+                    return this.users_[i];
+                }
+            }
+            return null;
         }
 
         /** 自分を取得 */

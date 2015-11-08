@@ -23,7 +23,7 @@ module chat {
         }
 
         /** チャットのメッセージ受信 */
-        postReadLog(callback: (chat: Chat) => void): void {
+        postReadLog(callback: (chat: Chat) => void, onError?: (chat: Chat) => void): void {
             // TODO: 一部だけ取得対応
             var a: ajax.Ajax = new ajax.Ajax(
                 new ajax.URL('localhost', 'Requests/Chat/Chat.php'),
@@ -37,7 +37,7 @@ module chat {
                         callback(this);
                     }
                 },
-                (o, m) => { console.log('通信エラー:' + m); });
+                (o, m) => { console.log('通信エラー:' + m); if (onError) { onError(this); } });
             a.setParameter({ 'group': this.group_ });
             a.connect();
         }
