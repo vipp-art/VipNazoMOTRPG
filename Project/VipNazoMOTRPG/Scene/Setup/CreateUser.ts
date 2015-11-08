@@ -1,5 +1,6 @@
 ﻿/// <refernece path="../../util/With.ts" />
 /// <refernece path="./RoomList.ts" />
+/// <reference path="../../player/UserManager.ts" />
 
 module scene.setup {
     export class CreateUser implements scene.IScene {
@@ -44,6 +45,9 @@ module scene.setup {
                     var userId:number = o.responseObject['id'];
                     this.isSuccessCreateUser_ = true;
                     this.dialog_.close();
+                    // 自分を登録
+                    player.UserManger.instance().setSelf(new player.UserInformation(userId));
+                    player.UserManger.instance().self.name = name;
                 },
                 (o, m) => { alert('通信エラー:' + m); this.reinput(); });
             a.setParameter({ 'name': name });

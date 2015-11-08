@@ -5,7 +5,7 @@ require_once dirname(__FILE__) . '/../MySql/DB.php';
 abstract class Request {
 
     /** @var array 返り値 */
-    private $responses_;
+    private $responses_ = [];
 
     /** @var array PUTのリクエスト */
     private $requests_ = null;
@@ -28,16 +28,22 @@ abstract class Request {
      * HTTP METHODの解決
      * @return type
      */
-    private static function getMethod() {
+    private function getMethod() {
         $method = filter_input(INPUT_SERVER, 'REQUEST_METHOD');
 
         if ($method === '' || !isset($method) || !is_string($method)) {
             $method = 'get';
         }
 
-        $method = strtolower($method);
-        $method[0] = strtoupper($method[0]);
-        return 'do' . $method;
+        $lowerMethod = strtolower($method);
+        $lowerMethod[0] = strtoupper($lowerMethod[0]);
+
+        // PUTなら送信データをパース
+        if ($lowerMethod === 'Put') {
+            $this->readPut();
+        }
+
+        return 'do' . $lowerMethod;
     }
 
     /**
@@ -66,47 +72,96 @@ abstract class Request {
     }
 
     /**
+     * 基本のレスポンスヘッダを返す
+     */
+    private function putCommonHeader($controller, $method) {
+        // 基本のヘッダー
+        header('Access-Control-Allow-Origin: http://localhost:52181');
+        header('Access-Control-Allow-Headers: *');
+        header('X-Content-Type-Options: nosniff');
+        header('Access-Control-Allow-Methods: GET, POST, PUT, OPTIONS, DELETE');
+
+        // OPTIONSはAllowを返すのみ
+        if ($method === 'doOptions') {
+            $methods = (new ReflectionClass(get_class($controller)))->getMethods();
+            $allows = [];
+            foreach ($methods as $m) {
+                if (strpos($m, 'do') === 0) {
+                    $allows[] = strtoupper(substr($m, 2));
+                }
+            }
+            header('Allow:' . join(',', $allows));
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * リクエストの処理
      */
     function request() {
-        $this->responses_ = array();
+        $isRollback = true;
+        $responseCode = 500;
 
-        $method = Request::getMethod();
+        $method = $this->getMethod();
         $controller = $this->createController();
 
         // 基本ヘッダ
-        header('Access-Control-Allow-Origin: http://localhost:52181');
-        header('Access-Control-Allow-Methods: GET, POST, PUT, OPTIONS, DELETE');
-        header('Access-Control-Allow-Headers: *');
-        header('X-Content-Type-Options: nosniff');
-
-        $isRollback = true;
-
-        // PUTなら送信データをパース
-        if ($method === 'doPut') {
-            $this->readPut();
+        if (!$this->putCommonHeader($controller, $method)) {
+            // ヘッダを返すだけで終わりのとき
+            return;
         }
 
+        // 処理
         if (method_exists($controller, $method)) {
             try {
-                // 処理
-                $controller->$method($this);
-                $result = json_encode($this->responses_);
-                header('Conent-Type: application/json');
-                echo $result;
+                $this->executeRequest($controller, $method);
                 $isRollback = false;
+                $responseCode = 200;
             } catch (\Exception $e) {
-                echo e;
-                http_response_code(500);
+                echo $e->getMessage();
             }
         } else {
-            echo get_class($controller);
-            echo $method;
-            exit();
-            http_response_code(500);
+            echo 'unknown request:' . get_class($controller) . '#' . $method;
         }
 
+        http_response_code($responseCode);
         $this->closeDB($isRollback);
+    }
+
+    /**
+     * リクエストの内容をコントローラで処理
+     * @param Controller $controller
+     * @param string $method
+     */
+    private function executeRequest($controller, $method) {
+        // アノテーション検索
+        $reflectionMethod = (new ReflectionClass(get_class($controller)))->getMethod($method);
+        $docComment = $reflectionMethod->getDocComment();
+        $isTransactional = FALSE;
+
+        if ($docComment !== FALSE) {
+            // トランザクション処理
+            $isTransactional = strpos($docComment, '@Transactional') !== FALSE;
+        }
+
+        if ($isTransactional) {
+            // DBをロック
+            $sql = \mysql\connect();
+            $sql->begin_transaction();
+        }
+
+        // 処理
+        $controller->$method($this);
+        $result = json_encode($this->responses_);
+
+        if ($isTransactional) {
+            // コミット
+            $sql = \mysql\connect();
+            $sql->commit();
+        }
+        header('Conent-Type: application/json');
+        echo $result;
     }
 
     /**

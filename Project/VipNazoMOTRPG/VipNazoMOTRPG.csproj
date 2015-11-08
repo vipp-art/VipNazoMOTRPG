@@ -41,6 +41,8 @@
     <TypeScriptCompile Include="Player\Player.ts" />
     <TypeScriptCompile Include="Player\PlayerHolder.ts" />
     <TypeScriptCompile Include="Player\CanvasPlayerRenderer.ts" />
+    <TypeScriptCompile Include="Player\UserInformation.ts" />
+    <TypeScriptCompile Include="Player\UserManager.ts" />
     <TypeScriptCompile Include="Scene\Game\Game.ts" />
     <TypeScriptCompile Include="Scene\IScene.ts" />
     <TypeScriptCompile Include="Scene\Setup\CreateUser.ts" />

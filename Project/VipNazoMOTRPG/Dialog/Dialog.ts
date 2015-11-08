@@ -38,6 +38,8 @@
         private text_: HTMLElement;
         /** インプットフォーム */
         private input_: HTMLInputElement;
+        /** テキストエリア */
+        private textarea_: HTMLTextAreaElement;
 
         /** ボタン */
         private button1_: HTMLInputElement;
@@ -60,6 +62,7 @@
             this.bg_ = document.getElementById('dialog-bg');
             this.text_ = document.getElementById('dialog-text');
             this.input_ = <HTMLInputElement> document.getElementById('dialog-input');
+            this.textarea_ = <HTMLTextAreaElement> document.getElementById('dialog-textarea');
 
             this.button1_ = <HTMLInputElement> document.getElementById('dialog-button1');
             this.button2_ = <HTMLInputElement> document.getElementById('dialog-button2');
@@ -77,9 +80,12 @@
             this.bg_.style.display = 'block';
 
             this.input_.style.display = 'none';
+            this.textarea_.style.display = 'none';
             this.button1_.style.display = 'none';
             this.button2_.style.display = 'none';
             this.button3_.style.display = 'none';
+
+            this.text_.style.height = '290px';
 
             this.isOpen_ = true;
         }
@@ -134,13 +140,26 @@
         }
 
         /** インプットフォーム有効化 */
-        enableInputForm(): void {
+        enableInputForm(placeholder?: string): void {
             this.input_.style.display = 'inline';
+            this.input_.placeholder = placeholder || '';
+        }
+
+        /** テキストエリアの有効化 */
+        enableTextForm(placeholder?: string): void {
+            this.textarea_.style.display = 'block';
+            this.textarea_.placeholder = placeholder || '';
+            this.text_.style.height = '90px';
         }
 
         /** インプットフォームの内容を取得 */
         get inputText(): string {
             return this.input_.value;
+        }
+
+        /** テキストエリアの内容を取得 */
+        get textareaText(): string {
+            return this.textarea_.value;
         }
 
         /** メッセージの設定 */

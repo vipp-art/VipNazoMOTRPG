@@ -122,6 +122,33 @@ module scene.setup {
 
         /** 部屋作成ボタン押下時 */
         private onCreateButtonClicked(): void {
+            var d = dialog.Dialog.openDialog();
+            d.enableTextForm('部屋の説明を入力してください。');
+            d.enableInputForm('部屋名を入力してください。');
+            d.setMessage('部屋情報を入力してください。');
+            d.setPositiveButton('作成', () => { this.createRoom( d.inputText, d.textareaText ); return true; });
+            d.setNegativeButton('キャンセル', () => { return false; });
+        }
+
+        /** 部屋作成 */
+        private createRoom(name: string, notice: string): void {
+            var a: ajax.Ajax = new ajax.Ajax(
+                new ajax.URL('localhost', 'Requests/Room/Room.php'),
+                (o) => {
+                    var result = o.responseObject;
+                    var roomId = result['room-id'];
+                    var gid1 = result['group-id1'];
+                    var gid2 = result['group-id2'];
+
+                    alert([roomId, gid1, gid2].join(','));
+                },
+                (o, m) => { alert('通信エラー:' + m); });
+            a.setParameter({
+                'name': name,
+                'text': notice,
+                'user': player.UserManger.instance().self.id
+            });
+            a.put();
         }
 
         update(): IScene {

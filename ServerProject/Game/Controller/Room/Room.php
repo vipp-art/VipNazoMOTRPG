@@ -82,6 +82,7 @@ class Room {
     /**
      * ルームの生成
      * @param \Request $request
+     * @Transactional
      */
     function doPut($request) {
         $name = $request->parameter('name');
