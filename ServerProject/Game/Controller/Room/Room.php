@@ -108,6 +108,11 @@ class Room {
     function doPost($request) {
         $id = $request->parameter('id');
         $user = $request->parameter('user');
+        
+        $room = new \game\model\Room($id);
+        $room->join(new \game\model\User($user));
+        $request->response('group-id1', $room->getGroup1()->getId());
+        $request->response('group-id2', $room->getGroup2()->getId());
     }
 
 }

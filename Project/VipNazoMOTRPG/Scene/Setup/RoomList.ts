@@ -82,6 +82,9 @@ module scene.setup {
         /** 部屋作成ボタン */
         private createButton_: util.button.RectButton;
 
+        /** 次のシーン */
+        private nextScene_: game.RoomInformation = null;
+
         constructor() {
             this.buttons_ = new ButtonManager;
         }
@@ -118,16 +121,35 @@ module scene.setup {
 
         /** ボタン押下時 */
         private onButtonClicked(button: RoomButton): void {
+            if (this.nextScene_) { return; }
+            var a: ajax.Ajax = new ajax.Ajax(
+                new ajax.URL('localhost', 'Requests/Room/Room.php'),
+                (o) => {
+                    var result = o.responseObject;
+                    var roomId = button.room.roomId;
+                    var name = button.room.name;
+                    var gid1 = result['group-id1'];
+                    var gid2 = result['group-id2'];
+
+                    this.nextScene_ = new game.RoomInformation(roomId, name, gid1, gid2);
+                },
+                (o, m) => { alert('通信エラー:' + m); });
+            a.setParameter({
+                'id': button.room.roomId,
+                'user': player.UserManger.instance().self.id
+            });
+            a.post();
         }
 
         /** 部屋作成ボタン押下時 */
         private onCreateButtonClicked(): void {
+            if (this.nextScene_) { return; }
             var d = dialog.Dialog.openDialog();
             d.enableTextForm('部屋の説明を入力してください。');
             d.enableInputForm('部屋名を入力してください。');
             d.setMessage('部屋情報を入力してください。');
             d.setPositiveButton('作成', () => { this.createRoom( d.inputText, d.textareaText ); return true; });
-            d.setNegativeButton('キャンセル', () => { return false; });
+            d.setNegativeButton('キャンセル', () => { return true; });
         }
 
         /** 部屋作成 */
@@ -140,7 +162,8 @@ module scene.setup {
                     var gid1 = result['group-id1'];
                     var gid2 = result['group-id2'];
 
-                    alert([roomId, gid1, gid2].join(','));
+                    player.UserManger.instance().self.group = gid1;
+                    this.nextScene_ = new game.RoomInformation(roomId, name, gid1, gid2);
                 },
                 (o, m) => { alert('通信エラー:' + m); });
             a.setParameter({
@@ -152,7 +175,7 @@ module scene.setup {
         }
 
         update(): IScene {
-            return null;
+            return this.nextScene_;
         }
 
         createSceneRenderer(canvas: sys.IGraphics): ISceneRenderer {

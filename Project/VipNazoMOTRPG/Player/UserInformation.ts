@@ -5,6 +5,8 @@
         private id_: number;
         /** 名前 */
         private name_: string = '';
+        /** 所属チーム */
+        private group_: number = -1;
 
         constructor(id: number) {
             this.id_ = id;
@@ -20,6 +22,14 @@
 
         set name(v: string) {
             this.name_ = v;
+        }
+
+        get group(): number {
+            return this.group_;
+        }
+
+        set group(v: number) {
+            this.group_ = v;
         }
     }
 } 

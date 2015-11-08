@@ -80,7 +80,10 @@
             this.bg_.style.display = 'block';
 
             this.input_.style.display = 'none';
+            this.input_.value = '';
             this.textarea_.style.display = 'none';
+            this.textarea_.value = '';
+
             this.button1_.style.display = 'none';
             this.button2_.style.display = 'none';
             this.button3_.style.display = 'none';
